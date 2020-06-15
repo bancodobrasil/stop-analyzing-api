@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  stop-analyzing-api:
+    image: local/stop-analyzing-api:0.0.1
+    build: .
+    ports:
+      - 8000:8000
+    environment: 
+      - STPA_API_LOG_LEVEL=info
+      - STPA_API_PORT=8000

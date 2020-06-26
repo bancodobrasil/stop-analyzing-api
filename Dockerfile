@@ -3,20 +3,29 @@ FROM golang:1.12.5-stretch as builder
 RUN mkdir /app
 WORKDIR /app
 
-COPY ./src/go.mod ./src/go.sum ./
-RUN go mod download
+COPY ./src/go.mod ./src/go.sum ./src/
+RUN cd /app/src \ 
+    && go mod download
 
-COPY ./src .
+COPY ./src /app/src
+COPY ./prisma /app/prisma
 
-RUN go test ./... \
+RUN cd /app/src \
+    && go run github.com/prisma/prisma-client-go generate --schema=/app/prisma/schema.prisma
+
+RUN cd /app/src \
+    # && go test ./service \
     && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o /go/bin/stop-analyzing-api .
 
-FROM alpine:3.12
+# FROM alpine:3.12
+FROM golang:1.12.5-stretch
 
 WORKDIR /app
 
-RUN apk add --quiet --no-cache openssl=1.1.1g-r0
+RUN apt-get update && apt-get install -y ca-certificates
+
+# RUN apk add --quiet --no-cache openssl=1.1.1g-r0
 
 COPY --from=builder /go/bin/stop-analyzing-api /app/stop-analyzing-api
 
-CMD [ "./stop-analyzing-api", "serve" ]
+CMD ["./stop-analyzing-api", "serve"]

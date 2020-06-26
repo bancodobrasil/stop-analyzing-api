@@ -6,6 +6,22 @@ services:
     build: .
     ports:
       - 8000:8000
+    restart: always
     environment: 
+      - DATABASE_URL=postgresql://user2020:pass2020@postgres:5432/stop-analyzing-api
       - STPA_API_LOG_LEVEL=info
       - STPA_API_PORT=8000
+  
+  postgres:
+    image: postgres:9.6-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=user2020
+      - POSTGRES_PASSWORD=pass2020
+      - POSTGRES_DB=stop-analyzing-api
+  
+  adminer:
+    image: adminer:latest
+    ports:
+      - 8085:8080

@@ -3,7 +3,9 @@ package service
 import (
 	"net/http"
 
+	"github.com/bancodobrasil/stop-analyzing-api/db"
 	"github.com/bancodobrasil/stop-analyzing-api/service/config"
+	v1 "github.com/bancodobrasil/stop-analyzing-api/service/v1"
 	ginprom "github.com/banzaicloud/go-gin-prometheus"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -12,7 +14,9 @@ import (
 //Server .
 type Server struct {
 	*config.ServiceBuilder
-	app *gin.Engine
+	app         *gin.Engine
+	databaseCli db.DatabasePrisma
+	routesV1    v1.Controller
 }
 
 //InitFromServiceBuilder builds a Server instance
@@ -30,28 +34,40 @@ func (s *Server) InitFromServiceBuilder(serviceBuilder *config.ServiceBuilder) *
 	p := ginprom.NewPrometheus("gin", []string{})
 	p.Use(s.app, "/metrics")
 
-	//Configure Routes
-	s.Routes()
+	//Configure Database
+	s.databaseCli, err = db.Connect()
+	if err != nil {
+		panic(0)
+	}
 
 	return s
+}
+
+//RoutesV1 .
+func (s *Server) RoutesV1() {
+	s.routesV1 = v1.InitRoutesV1(s.databaseCli)
+
+	v1Group := s.app.Group("/v1/")
+	{
+		v1Group.GET("/", s.routesV1.Index)
+		v1Group.GET("/listTags", s.routesV1.ListAllTags)
+	}
 }
 
 //Routes .
 func (s *Server) Routes() {
 	s.app.GET("/", index)
-
-	// Versions
-	v1Group := s.app.Group("/v1/")
-	{
-		v1Group.GET("/", index)
-		// consumerGroup.GET("/owner/:owner/thing/:thing/node/:node", s.consumer.GetHandler)
-		// consumerGroup.POST("/owner/:owner/thing/:thing/node/:node", s.consumer.CreateHandler)
-	}
 }
 
 //Run starts the http server service
 func (s *Server) Run() {
 	logrus.Info("Version 0.0.1")
+
+	//Configure Routes
+	s.Routes()
+	s.RoutesV1()
+
+	defer s.databaseCli.Disconnect()
 	s.app.Run("0.0.0.0:" + s.ServiceBuilder.Port)
 }
 

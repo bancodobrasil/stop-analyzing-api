@@ -1,0 +1,2 @@
+prisma/migrations*
+src/db/db_gen*

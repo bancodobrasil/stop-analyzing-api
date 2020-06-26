@@ -17,9 +17,23 @@ That's it. Just make yourself at home and good luck!
 
 ## Getting Started
 
+### Generate database using the Prisma migration tool
+
+To generate the database and the go class to handle the connection run the migration tool:
+1. Start database and adminer using the command `docker-compose up -d postgres adminer`
+1. At the prisma folder run the `generate.sh` file using the command `sh generate.sh`
+1. Your database is started and the tables are generated
+
+### Build API
+To build stop-analyzing-api run the below code at the project root folder:
+```
+docker-compose build
+```
+
+### Run API
 To run stop-analyzing-api run the below code at the project root folder:
 ```
-docker-compose up
+docker-compose up stop-analyzing-api
 ```
 
 ## Awesome list of other Poppins projects for you to go 

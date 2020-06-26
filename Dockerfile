@@ -17,14 +17,11 @@ RUN cd /app/src \
     # && go test ./service \
     && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o /go/bin/stop-analyzing-api .
 
-# FROM alpine:3.12
-FROM golang:1.12.5-stretch
+FROM ubuntu:18.04
 
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y ca-certificates
-
-# RUN apk add --quiet --no-cache openssl=1.1.1g-r0
 
 COPY --from=builder /go/bin/stop-analyzing-api /app/stop-analyzing-api
 

@@ -27,7 +27,7 @@ To generate the database and the go class to handle the connection run the migra
 
 ### Build API
 
-To build stop-analyzing-api run the below code at the project root folder:
+To build stop-analyzing-api run the below code at the project root folder to run with Docker (suggested):
 
 ```
 docker-compose build
@@ -38,7 +38,13 @@ docker-compose build
 To run stop-analyzing-api run the below code at the project root folder:
 
 ```
-docker-compose up stop-analyzing-api
+$ docker-compose up stop-analyzing-api
+```
+
+or to run with your local Go installation:
+
+```
+$ go run main.go
 ```
 
 ## Awesome list of other Poppins projects for you to go

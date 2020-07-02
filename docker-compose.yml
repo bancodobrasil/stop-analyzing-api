@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   stop-analyzing-api:
@@ -7,21 +7,26 @@ services:
     ports:
       - 8000:8000
     restart: always
-    environment: 
+    environment:
       - DATABASE_URL=postgresql://user2020:pass2020@postgres:5432/stop-analyzing-api
       - STPA_API_LOG_LEVEL=info
       - STPA_API_PORT=8000
-  
+
   postgres:
     image: postgres:9.6-alpine
+    restart: always
     ports:
       - 5432:5432
     environment:
       - POSTGRES_USER=user2020
       - POSTGRES_PASSWORD=pass2020
       - POSTGRES_DB=stop-analyzing-api
-  
-  adminer:
-    image: adminer:latest
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
     ports:
-      - 8085:8080
+      - 8008:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin

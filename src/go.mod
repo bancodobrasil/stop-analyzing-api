@@ -7,10 +7,14 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-delve/delve v1.4.1
 	github.com/labbsr0x/whisper v0.5.4 // indirect
+	github.com/mattn/go-colorable v0.0.9 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/prisma/prisma-client-go v0.0.2
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.4.0
+	github.com/stretchr/objx v0.1.1 // indirect
 	gotest.tools v2.2.0+incompatible
 )

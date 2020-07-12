@@ -30,7 +30,7 @@ In both cases is possible to start from a clean database using the '--recreate-d
 
 		recreateDB := viper.GetViper().GetBool("recreate-database")
 
-		return migration.Migrate(args[0], recreateDB)
+		return migration.Exec(args[0], recreateDB)
 	},
 }
 

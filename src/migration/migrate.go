@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 )
 
-//Migrate function selects the correct migration type (url or filesystem) and then execute the import
-func Migrate(path string, recreate bool) error {
-
-	//TODO: select URL or filesystem and then call the correct method
+//Exec function selects the correct migration type (url or filesystem) and then execute the import
+func Exec(path string, recreate bool) error {
 
 	return nil
 }

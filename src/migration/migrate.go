@@ -1,6 +1,16 @@
 package migration
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
+
+//Migrate function selects the correct migration type (url or filesystem) and then execute the import
+func Migrate(path string, recreate bool) error {
+
+	//TODO: select URL or filesystem and then call the correct method
+
+	return nil
+}
 
 func migrateFromURL(url string) {
 

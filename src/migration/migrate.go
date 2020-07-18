@@ -8,22 +8,54 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/bancodobrasil/stop-analyzing-api/db"
 	"github.com/sirupsen/logrus"
 )
 
-//Exec function selects the correct migration type (url or filesystem) and then execute the import
-func Exec(path string, recreate bool) error {
+//Do function selects the correct migration type (url or filesystem) and then execute the import
+func Do(path string, recreate bool) error {
 
-	//TODO: drop db on if recreate is true
+	db, err := db.Connect()
 
-	if isURL(path) {
-		return migrateFromURL(path)
+	if err != nil {
+		panic(err)
 	}
 
-	return migrateFromFile(path)
+	defer db.Disconnect()
+
+	importer := databaseImporter{db: &db}
+
+	if recreate {
+		if err := importer.Drop(); err != nil {
+			return err
+		}
+	}
+
+	if isURL(path) {
+		urlMigrator := urlMigrator{&importer}
+		return urlMigrator.Migrate(path)
+	}
+
+	fsMigrator := filesystemMigrator{&importer}
+	return fsMigrator.Migrate(path)
 }
 
-func migrateFromURL(url string) error {
+//Migrator migrates from a path source to a specific destination.
+type Migrator interface {
+	Migrate(source string) error
+}
+
+//ItemImporter uses a destination source instance to drop and import items
+type ItemImporter interface {
+	Import(items []Item) error
+	Drop() error
+}
+
+type urlMigrator struct {
+	importer ItemImporter
+}
+
+func (um *urlMigrator) Migrate(url string) error {
 
 	logrus.Infof("Migrating database from URL: %s", url)
 
@@ -39,12 +71,33 @@ func migrateFromURL(url string) error {
 		return err
 	}
 
-	return importItems(items)
+	return um.importer.Import(items)
 }
 
-func migrateFromFile(filePath string) error {
-	logrus.Infof("Migrating database from file: %s", filePath)
+type filesystemMigrator struct {
+	importer ItemImporter
+}
+
+func (fm *filesystemMigrator) Migrate(path string) error {
+	logrus.Infof("Migrating database from file: %s", path)
+
+	//TODO: Execute file migration
+
 	return nil
+}
+
+type databaseImporter struct {
+	db *db.DatabasePrisma
+}
+
+func (di *databaseImporter) Import(items []Item) error {
+	//TODO: Import items
+	return nil
+}
+
+func (di *databaseImporter) Drop() error {
+	_, err := di.db.DropAllTags()
+	return err
 }
 
 func parseItems(body []byte) ([]Item, error) {
@@ -56,11 +109,6 @@ func parseItems(body []byte) ([]Item, error) {
 	}
 
 	return items, nil
-}
-
-func importItems([]Item) error {
-	//TODO: Import items
-	return nil
 }
 
 func isURL(str string) bool {

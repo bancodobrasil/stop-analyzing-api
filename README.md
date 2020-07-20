@@ -17,6 +17,10 @@ That's it. Just make yourself at home and good luck!
 
 ## Getting Started
 
+### Configure pre-commit code validations
+This project includes pre-commit git hooks that make sure the code you commit is valid.
+In order to use them, you should rewire the default git hooks folder in your local repository by running (only once) ` git config core.hooksPath .githooks`.
+
 ### Generate database using the Prisma migration tool
 
 To generate the database and the go class to handle the connection run the migration tool:

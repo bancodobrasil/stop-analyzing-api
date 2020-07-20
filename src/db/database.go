@@ -71,6 +71,7 @@ func (d *DatabasePrisma) GetAllTags() ([]TagModel, error) {
 	return tags, nil
 }
 
+//DropAllTags removes all existing database tags
 func (d *DatabasePrisma) DropAllTags() (int, error) {
 	ctx := context.Background()
 	return d.client.Tag.FindMany().Delete().Exec(ctx)

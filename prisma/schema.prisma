@@ -9,20 +9,21 @@ generator db {
   package = "db"
 }
 
-model Image {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  published Boolean  @default(false)
-  name      String
-  filePath  String   @unique
-  tags      Tag[]    @relation(references: [id])
+model Item {
+  id          Int      @id @default(autoincrement())
+  title       String
+  subtitle    String
+  contentURL  String   @unique
+  tags        Tag[]    @relation(references: [id])
+  active      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Tag {
   id        Int      @id @default(autoincrement())
+  text      String   @unique
+  items     Item[]   @relation(references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tagName   String
-  images    Image[]  @relation(references: [id])
 }

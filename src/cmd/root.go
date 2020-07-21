@@ -11,7 +11,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:   "Stop Analyzing API",
-	Short: "Stop Analyzing API Comand Line",
+	Short: "Stop Analyzing API Command Line",
 }
 
 func Execute() {

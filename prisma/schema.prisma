@@ -25,4 +25,16 @@ model Tag {
   updatedAt DateTime @updatedAt
   tagName   String
   images    Image[]  @relation(references: [id])
+  items     Item[]   @relation(references: [id])    
+}
+
+model Item {
+  id          Int      @id @default(autoincrement())
+  title       String
+  subtitle    String
+  contentURL  String   @unique
+  tags        Tag[]    @relation(references: [id])
+  active      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

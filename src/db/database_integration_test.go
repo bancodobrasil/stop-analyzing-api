@@ -36,6 +36,8 @@ func TestListAllTags(t *testing.T) {
 	if len(tags) != 3 {
 		t.Errorf("Error while listing all tags, expected len: %d, got: %d", 3, len(tags))
 	}
+
+	dbCli.DropAllTags()
 }
 
 func TestShouldCreateNewTag(t *testing.T) {
@@ -56,8 +58,8 @@ func TestShouldCreateNewTag(t *testing.T) {
 		t.Error(err)
 	}
 
-	if tag.TagName != expectedName {
-		t.Errorf("Error while creating tag, expecting name: %s, got: %s", expectedName, tag.TagName)
+	if tag.Text != expectedName {
+		t.Errorf("Error while creating tag, expecting name: %s, got: %s", expectedName, tag.Text)
 	}
 
 	dbCli.DeleteTag(expectedName)
@@ -112,10 +114,10 @@ func TestShouldFetchAndCreateTags(t *testing.T) {
 
 	for _, e := range existingTags {
 
-		fetched, ok := tags[e.TagName]
+		fetched, ok := tags[e.Text]
 
 		if !ok {
-			t.Errorf("Expecting existing %s, but it was not found", e.TagName)
+			t.Errorf("Expecting existing %s, but it was not found", e.Text)
 		}
 
 		if fetched.ID != e.ID {
@@ -125,7 +127,7 @@ func TestShouldFetchAndCreateTags(t *testing.T) {
 
 	//clean-up
 	for _, v := range tags {
-		dbCli.DeleteTag(v.TagName)
+		dbCli.DeleteTag(v.Text)
 	}
 }
 
@@ -149,7 +151,9 @@ func TestShouldCreateNewItem(t *testing.T) {
 		t.Error(err)
 	}
 
-	defer dbCli.DropItem(item.ID)
+	defer dbCli.DeleteItem(item.ID)
+	defer dbCli.DeleteTag("tag1")
+	defer dbCli.DeleteTag("tag2")
 
 	fetchedItem, err := dbCli.FetchItem(item.ID)
 

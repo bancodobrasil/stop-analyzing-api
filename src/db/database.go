@@ -33,27 +33,11 @@ func (d *DatabasePrisma) Disconnect() {
 	}
 }
 
-//CreateImage .
-func (d *DatabasePrisma) CreateImage(imageName string, filePath string, tags []string) error {
-	ctx := context.Background()
-	_, err := d.client.Image.CreateOne(
-		Image.Name.Set(imageName),
-		Image.FilePath.Set(filePath),
-		Image.Tags.Link(
-			Tag.TagName.In(tags),
-		),
-	).Exec(ctx)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 //CreateTag .
 func (d *DatabasePrisma) CreateTag(tagName string) (TagModel, error) {
 	ctx := context.Background()
 	return d.client.Tag.CreateOne(
-		Tag.TagName.Set(tagName),
+		Tag.Text.Set(tagName),
 	).Exec(ctx)
 }
 
@@ -71,7 +55,7 @@ func (d *DatabasePrisma) GetAllTags() ([]TagModel, error) {
 func (d *DatabasePrisma) FetchTags(names []string) ([]TagModel, error) {
 	ctx := context.Background()
 	return d.client.Tag.FindMany(
-		Tag.TagName.In(names),
+		Tag.Text.In(names),
 	).Exec(ctx)
 }
 
@@ -85,7 +69,7 @@ func (d *DatabasePrisma) FetchOrCreateTags(names []string) (map[string]TagModel,
 	//Inserting into a map to reduce sort and search overhead
 	nTags := make(map[string]TagModel, len(tags))
 	for _, tag := range tags {
-		nTags[tag.TagName] = tag
+		nTags[tag.Text] = tag
 	}
 
 	for _, name := range names {
@@ -105,7 +89,7 @@ func (d *DatabasePrisma) FetchOrCreateTags(names []string) (map[string]TagModel,
 //DeleteTag remove an existing database tag
 func (d *DatabasePrisma) DeleteTag(name string) error {
 	_, err := d.client.Tag.FindOne(
-		Tag.TagName.Equals(name),
+		Tag.Text.Equals(name),
 	).Delete().Exec(context.Background())
 
 	return err
@@ -166,8 +150,8 @@ func (d *DatabasePrisma) FetchItem(id int) (ItemModel, error) {
 	).Exec(ctx)
 }
 
-//DropItem remove an existing database item
-func (d *DatabasePrisma) DropItem(id int) (ItemModel, error) {
+//DeleteItem remove an existing database item
+func (d *DatabasePrisma) DeleteItem(id int) (ItemModel, error) {
 	return d.client.Item.FindOne(
 		Item.ID.Equals(id),
 	).Delete().Exec(context.Background())

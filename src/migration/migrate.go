@@ -91,12 +91,19 @@ type databaseImporter struct {
 }
 
 func (di *databaseImporter) Import(items []Item) error {
-	//TODO: Import items
+
+	for _, item := range items {
+		if _, err := di.db.CreateItem(item.Title, item.Subtitle, item.ContentURL, item.Tags); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
 func (di *databaseImporter) Drop() error {
 	_, err := di.db.DropAllTags()
+	_, err = di.db.DropAllItems()
 	return err
 }
 

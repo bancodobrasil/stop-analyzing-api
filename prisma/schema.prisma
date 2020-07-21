@@ -23,7 +23,7 @@ model Tag {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tagName   String
+  tagName   String   @unique
   images    Image[]  @relation(references: [id])
   items     Item[]   @relation(references: [id])    
 }

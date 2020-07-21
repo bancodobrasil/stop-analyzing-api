@@ -132,21 +132,43 @@ func (d *DatabasePrisma) CreateItem(title, subtitle, content string, tags []stri
 		return ItemModel{}, err
 	}
 
-	tagsParam := make([]iTagParams, 0)
-
-	for _, mTag := range mTags {
-		tagsParam = append(tagsParam, Tag.ID.Equals(mTag.ID))
-	}
-
-	ctx := context.Background()
-
-	return d.client.Item.CreateOne(
+	item, err := d.client.Item.CreateOne(
 		Item.Title.Set(title),
 		Item.Subtitle.Set(subtitle),
 		Item.ContentURL.Set(content),
 		Item.Active.Set(true),
-		Item.Tags.Link(
-			tagsParam...,
-		),
+	).Exec(context.Background())
+
+	if err != nil {
+		return item, err
+	}
+
+	//Link tags - TODO: Check if its possible to use/create one method to link them all
+	findResult := d.client.Item.FindOne(
+		Item.ID.Equals(item.ID),
+	)
+	for _, mTag := range mTags {
+		item, err = findResult.Update(
+			Item.Tags.Link(Tag.ID.Equals(mTag.ID)),
+		).Exec(context.Background())
+	}
+
+	return item, err
+}
+
+//FetchItem searchs for an item using its unique id
+func (d *DatabasePrisma) FetchItem(id int) (ItemModel, error) {
+	ctx := context.Background()
+	return d.client.Item.FindOne(
+		Item.ID.Equals(id),
+	).With(
+		Item.Tags.Fetch(),
 	).Exec(ctx)
+}
+
+//DropItem remove an existing database item
+func (d *DatabasePrisma) DropItem(id int) (ItemModel, error) {
+	return d.client.Item.FindOne(
+		Item.ID.Equals(id),
+	).Delete().Exec(context.Background())
 }

@@ -3,31 +3,43 @@ package db
 import (
 	"fmt"
 	"os"
-	"reflect"
 	"testing"
-
-	"gotest.tools/assert"
 )
 
 func TestListAllTags(t *testing.T) {
-	os.Setenv("DATABASE_URL", "postgresql://user2020:pass2020@localhost:5432/stop-analyzing-api")
+	configEnvVars()
 
 	dbCli, err := Connect()
 	if err != nil {
 		fmt.Errorf("Error at test List All Tags - Connect to Database: %s", err)
 	}
+
 	defer dbCli.Disconnect()
+
+	dbCli.DropAllTags()
+
 	tags, err := dbCli.GetAllTags()
 	if err != nil {
 		fmt.Errorf("Error at test List All Tags - Get All Tags: %s", err)
 	}
 
-	expectedResult := []TagModel{}
-	assert.Equal(t, true, reflect.DeepEqual(tags, expectedResult))
+	if len(tags) != 0 {
+		t.Errorf("Error while listing all tags, expected len: %d, got: %d", 0, len(tags))
+	}
+
+	_, err = dbCli.CreateTag("name1")
+	_, err = dbCli.CreateTag("name2")
+	_, err = dbCli.CreateTag("name3")
+
+	tags, err = dbCli.GetAllTags()
+
+	if len(tags) != 3 {
+		t.Errorf("Error while listing all tags, expected len: %d, got: %d", 3, len(tags))
+	}
 }
 
 func TestShouldCreateNewTag(t *testing.T) {
-	os.Setenv("DATABASE_URL", "postgresql://user2020:pass2020@localhost:5432/stop-analyzing-api")
+	configEnvVars()
 
 	dbCli, err := Connect()
 	if err != nil {
@@ -52,7 +64,7 @@ func TestShouldCreateNewTag(t *testing.T) {
 }
 
 func TestShouldFetchAndCreateTags(t *testing.T) {
-	os.Setenv("DATABASE_URL", "postgresql://user2020:pass2020@localhost:5432/stop-analyzing-api")
+	configEnvVars()
 
 	dbCli, err := Connect()
 	if err != nil {
@@ -118,7 +130,7 @@ func TestShouldFetchAndCreateTags(t *testing.T) {
 }
 
 func TestShouldCreateNewItem(t *testing.T) {
-	os.Setenv("DATABASE_URL", "postgresql://user2020:pass2020@localhost:5432/stop-analyzing-api")
+	configEnvVars()
 
 	dbCli, err := Connect()
 	if err != nil {
@@ -137,23 +149,33 @@ func TestShouldCreateNewItem(t *testing.T) {
 		t.Error(err)
 	}
 
-	if !item.Active {
+	defer dbCli.DropItem(item.ID)
+
+	fetchedItem, err := dbCli.FetchItem(item.ID)
+
+	if !fetchedItem.Active {
 		t.Errorf("Item should be created as active and it was %v", item.Active)
 	}
 
-	if item.Title != itemTitle {
+	if fetchedItem.Title != itemTitle {
 		t.Errorf("Wrong item title, expected: %s, found: %s", itemTitle, item.Title)
 	}
 
-	if item.Subtitle != itemSubtitle {
+	if fetchedItem.Subtitle != itemSubtitle {
 		t.Errorf("Wrong item subtitle, expected: %s, found: %s", itemSubtitle, item.Subtitle)
 	}
 
-	if item.ContentURL != itemContent {
+	if fetchedItem.ContentURL != itemContent {
 		t.Errorf("Wrong item content, expected: %s, found: %s", itemContent, item.ContentURL)
 	}
 
-	if len(item.Tags()) != 2 {
-		t.Errorf("Wrong item tags, expected size: %d, found: %d", 2, len(item.Tags()))
+	fmt.Println(fetchedItem.Tags())
+
+	if len(fetchedItem.Tags()) != 2 {
+		t.Errorf("Wrong item tags, expected size: %d, found: %d", 2, len(fetchedItem.Tags()))
 	}
+}
+
+func configEnvVars() {
+	os.Setenv("DATABASE_URL", "postgresql://user2020:pass2020@localhost:5432/stop-analyzing-api")
 }

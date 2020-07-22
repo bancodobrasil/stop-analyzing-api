@@ -74,16 +74,31 @@ func (um *urlMigrator) Migrate(url string) error {
 	return um.importer.Import(items)
 }
 
+//filesystemMigrator is a struct to migration from json file.
 type filesystemMigrator struct {
 	importer ItemImporter
 }
 
-func (fm *filesystemMigrator) Migrate(path string) error {
-	logrus.Infof("Migrating database from file: %s", path)
+/*
+Migrate migrate from json file.
 
-	//TODO: Execute file migration
+-filePath: json file path. Example: ./testdata/migration/test-migration.json
 
-	return nil
+*/
+func (fm *filesystemMigrator) Migrate(filePath string) error {
+	logrus.Infof("Migrating database from file: %s", filePath)
+
+	jsonFile, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return err
+	}
+
+	items, err := parseItems(jsonFile)
+	if err != nil {
+		return err
+	}
+
+	return fm.importer.Import(items)
 }
 
 type databaseImporter struct {

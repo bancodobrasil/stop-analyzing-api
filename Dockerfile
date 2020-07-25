@@ -3,12 +3,12 @@ FROM golang:1.12.5-stretch as builder
 RUN mkdir /app
 WORKDIR /app
 
-COPY ./src/go.mod ./src/go.sum ./src/
+COPY go.mod ./src/go.sum ./src/
 RUN cd /app/src \ 
     && go mod download
 
 COPY ./src /app/src
-COPY ./prisma /app/prisma
+COPY scripts/prisma /app/prisma
 
 RUN cd /app/src \
     && go run github.com/prisma/prisma-client-go generate --schema=/app/prisma/schema.prisma

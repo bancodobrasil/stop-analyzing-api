@@ -26,7 +26,7 @@ In order to use them, you should rewire the default git hooks folder in your loc
 To generate the database and the go class to handle the connection run the migration tool:
 
 1. Start database and pgadmin using the command `docker-compose up -d postgres pgadmin`
-1. At the prisma folder run the `generate.sh` file using the command `sh generate.sh`
+1. At the scripts/prisma folder run the `generate.sh` file using the command `sh generate.sh`
 1. Your database is started and the tables are generated
 
 ### Build API

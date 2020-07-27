@@ -2,3 +2,4 @@ scripts/prisma/migrations*
 internal/db/db_gen*
 stop-analyzing-api
 .vscode/
+.idea/

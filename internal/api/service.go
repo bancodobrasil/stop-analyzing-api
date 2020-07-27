@@ -1,7 +1,7 @@
 package api
 
 import (
-	v12 "github.com/bancodobrasil/stop-analyzing-api/internal/api/v1"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/api/v1"
 	"github.com/bancodobrasil/stop-analyzing-api/internal/domain"
 	"net/http"
 
@@ -15,7 +15,7 @@ type Server struct {
 	*config.APIBuilder
 	app      *gin.Engine
 	service  *domain.Service
-	routesV1 v12.Controller
+	routesV1 v1.Controller
 }
 
 //InitFromAPIBuilder builds a Server instance
@@ -44,7 +44,7 @@ func (s *Server) InitFromAPIBuilder(serviceBuilder *config.APIBuilder) *Server {
 
 //RoutesV1 .
 func (s *Server) RoutesV1() {
-	s.routesV1 = v12.InitRoutesV1(s.service)
+	s.routesV1 = v1.InitRoutesV1(s.service)
 
 	v1Group := s.app.Group("/v1/")
 	{

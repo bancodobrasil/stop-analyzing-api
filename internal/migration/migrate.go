@@ -8,22 +8,22 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/bancodobrasil/stop-analyzing-api/db"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/domain"
 	"github.com/sirupsen/logrus"
 )
 
 //Do function selects the correct migration type (url or filesystem) and then execute the import
 func Do(path string, recreate bool) error {
 
-	db, err := db.Connect()
+	service, err := domain.NewService()
 
 	if err != nil {
 		panic(err)
 	}
 
-	defer db.Disconnect()
+	defer service.Disconnect()
 
-	importer := databaseImporter{db: &db}
+	importer := databaseImporter{service: service}
 
 	if recreate {
 		if err := importer.Drop(); err != nil {
@@ -102,13 +102,13 @@ func (fm *filesystemMigrator) Migrate(filePath string) error {
 }
 
 type databaseImporter struct {
-	db *db.DatabasePrisma
+	service *domain.Service
 }
 
 func (di *databaseImporter) Import(items []Item) error {
 
 	for _, item := range items {
-		if _, err := di.db.CreateItem(item.Title, item.Subtitle, item.ContentURL, item.Tags); err != nil {
+		if _, err := di.service.CreateItem(item.Title, item.Subtitle, item.ContentURL, item.Tags); err != nil {
 			return err
 		}
 	}
@@ -117,8 +117,8 @@ func (di *databaseImporter) Import(items []Item) error {
 }
 
 func (di *databaseImporter) Drop() error {
-	_, err := di.db.DropAllTags()
-	_, err = di.db.DropAllItems()
+	_, err := di.service.DropAllTags()
+	_, err = di.service.DropAllItems()
 	return err
 }
 

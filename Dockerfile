@@ -3,19 +3,14 @@ FROM golang:1.12.5-stretch as builder
 RUN mkdir /app
 WORKDIR /app
 
-COPY ./src/go.mod ./src/go.sum ./src/
-RUN cd /app/src \ 
-    && go mod download
+COPY go.mod .
+RUN go mod download
 
-COPY ./src /app/src
-COPY ./prisma /app/prisma
+COPY . /app
 
-RUN cd /app/src \
-    && go run github.com/prisma/prisma-client-go generate --schema=/app/prisma/schema.prisma
+RUN go run github.com/prisma/prisma-client-go generate --schema=/app/scripts/prisma/schema.prisma
 
-RUN cd /app/src \
-    # && go test ./service \
-    && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o /go/bin/stop-analyzing-api .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o /go/bin/stop-analyzing-api .
 
 FROM ubuntu:18.04
 

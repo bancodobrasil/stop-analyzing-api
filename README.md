@@ -19,14 +19,14 @@ That's it. Just make yourself at home and good luck!
 
 ### Configure pre-commit code validations
 This project includes pre-commit git hooks that make sure the code you commit is valid.
-In order to use them, you should rewire the default git hooks folder in your local repository by running (only once) ` git config core.hooksPath .githooks`.
+In order to use them, you should rewire the default git hooks folder in your local repository by running (only once) ` git config core.hooksPath githooks`.
 
 ### Generate database using the Prisma migration tool
 
 To generate the database and the go class to handle the connection run the migration tool:
 
 1. Start database and pgadmin using the command `docker-compose up -d postgres pgadmin`
-1. At the prisma folder run the `generate.sh` file using the command `sh generate.sh`
+1. At the scripts/prisma folder run the `generate.sh` file using the command `sh generate.sh`
 1. Your database is started and the tables are generated
 
 ### Build API

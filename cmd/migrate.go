@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/bancodobrasil/stop-analyzing-api/migration"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/migration"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

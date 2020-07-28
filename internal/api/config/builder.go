@@ -21,8 +21,8 @@ type Flags struct {
 	Port      string
 }
 
-//ServiceBuilder .
-type ServiceBuilder struct {
+//APIBuilder .
+type APIBuilder struct {
 	*Flags
 }
 
@@ -33,7 +33,7 @@ func AddFlags(flags *pflag.FlagSet) {
 }
 
 //Init .
-func (b *ServiceBuilder) Init(v *viper.Viper) *ServiceBuilder {
+func (b *APIBuilder) Init(v *viper.Viper) *APIBuilder {
 	flags := new(Flags)
 
 	flags.Port = v.GetString(port)

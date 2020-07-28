@@ -1,3 +1,5 @@
-prisma/migrations*
-src/db/db_gen*
+scripts/prisma/migrations*
+internal/db/db_gen*
 stop-analyzing-api
+.vscode/
+.idea/

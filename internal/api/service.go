@@ -1,30 +1,29 @@
-package service
+package api
 
 import (
+	"github.com/bancodobrasil/stop-analyzing-api/internal/api/v1"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/domain"
 	"net/http"
 
-	"github.com/bancodobrasil/stop-analyzing-api/db"
-	"github.com/bancodobrasil/stop-analyzing-api/service/config"
-	v1 "github.com/bancodobrasil/stop-analyzing-api/service/v1"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/api/config"
 	ginprom "github.com/banzaicloud/go-gin-prometheus"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
-//Server .
 type Server struct {
-	*config.ServiceBuilder
-	app         *gin.Engine
-	databaseCli db.DatabasePrisma
-	routesV1    v1.Controller
+	*config.APIBuilder
+	app      *gin.Engine
+	service  *domain.Service
+	routesV1 v1.Controller
 }
 
-//InitFromServiceBuilder builds a Server instance
-func (s *Server) InitFromServiceBuilder(serviceBuilder *config.ServiceBuilder) *Server {
-	s.ServiceBuilder = serviceBuilder
+//InitFromAPIBuilder builds a Server instance
+func (s *Server) InitFromAPIBuilder(serviceBuilder *config.APIBuilder) *Server {
+	s.APIBuilder = serviceBuilder
 	s.app = gin.New()
 
-	logLevel, err := logrus.ParseLevel(s.ServiceBuilder.LogLevel)
+	logLevel, err := logrus.ParseLevel(s.APIBuilder.LogLevel)
 	if err != nil {
 		logrus.Errorf("Not able to parse log level string. Setting default level: info.")
 		logLevel = logrus.InfoLevel
@@ -35,7 +34,7 @@ func (s *Server) InitFromServiceBuilder(serviceBuilder *config.ServiceBuilder) *
 	p.Use(s.app, "/metrics")
 
 	//Configure Database
-	s.databaseCli, err = db.Connect()
+	s.service, err = domain.NewService()
 	if err != nil {
 		panic(0)
 	}
@@ -45,7 +44,7 @@ func (s *Server) InitFromServiceBuilder(serviceBuilder *config.ServiceBuilder) *
 
 //RoutesV1 .
 func (s *Server) RoutesV1() {
-	s.routesV1 = v1.InitRoutesV1(s.databaseCli)
+	s.routesV1 = v1.InitRoutesV1(s.service)
 
 	v1Group := s.app.Group("/v1/")
 	{
@@ -67,8 +66,8 @@ func (s *Server) Run() {
 	s.Routes()
 	s.RoutesV1()
 
-	defer s.databaseCli.Disconnect()
-	s.app.Run("0.0.0.0:" + s.ServiceBuilder.Port)
+	defer s.service.Disconnect()
+	s.app.Run("0.0.0.0:" + s.APIBuilder.Port)
 }
 
 func index(ctx *gin.Context) {

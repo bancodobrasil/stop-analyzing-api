@@ -1,4 +1,4 @@
-package service
+package api
 
 import (
 	"net/http"
@@ -6,14 +6,14 @@ import (
 	"os"
 	"testing"
 
-	"github.com/bancodobrasil/stop-analyzing-api/service/config"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/api/config"
 	"github.com/spf13/viper"
 	"gotest.tools/assert"
 )
 
 func TestUpAndRunning(t *testing.T) {
-	builder := new(config.ServiceBuilder).Init(viper.GetViper())
-	router := new(Server).InitFromServiceBuilder(builder)
+	builder := new(config.APIBuilder).Init(viper.GetViper())
+	router := new(Server).InitFromAPIBuilder(builder)
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
@@ -26,8 +26,8 @@ func TestUpAndRunning(t *testing.T) {
 func TestRegisterRoutesV1(t *testing.T) {
 	os.Setenv("DATABASE_URL", "postgresql://user2020:pass2020@localhost:5432/stop-analyzing-api")
 
-	builder := new(config.ServiceBuilder).Init(viper.GetViper())
-	router := new(Server).InitFromServiceBuilder(builder)
+	builder := new(config.APIBuilder).Init(viper.GetViper())
+	router := new(Server).InitFromAPIBuilder(builder)
 	//Register V1 Routes
 	router.RoutesV1()
 

@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/bancodobrasil/stop-analyzing-api/service"
-	"github.com/bancodobrasil/stop-analyzing-api/service/config"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/api"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/api/config"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -11,8 +11,8 @@ var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Starts the HTTP REST APIs server",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		builder := new(config.ServiceBuilder).Init(viper.GetViper())
-		server := new(service.Server).InitFromServiceBuilder(builder)
+		builder := new(config.APIBuilder).Init(viper.GetViper())
+		server := new(api.Server).InitFromAPIBuilder(builder)
 		server.Run()
 		return nil
 	},

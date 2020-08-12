@@ -26,10 +26,10 @@ In order to use them, you should rewire the default git hooks folder in your loc
 To generate the database and the go class to handle the connection run the migration tool:
 
 1. Start database and pgadmin using the command `docker-compose up -d postgres pgadmin`
-1. At the scripts/prisma folder run the `generate.sh` file using the command `sh generate.sh`
-1. Your database is started and the tables are generated
+2. At the scripts/prisma folder run the `generate.sh` file using the command `sh generate.sh`
+3. Your database is started and the tables are generated
 
-### Build API
+### Build API under Docker
 
 To build stop-analyzing-api run the below code at the project root folder to run with Docker (suggested):
 
@@ -37,7 +37,7 @@ To build stop-analyzing-api run the below code at the project root folder to run
 docker-compose build
 ```
 
-### Run API
+### Run API under Docker
 
 To run stop-analyzing-api run the below code at the project root folder:
 
@@ -45,7 +45,17 @@ To run stop-analyzing-api run the below code at the project root folder:
 $ docker-compose up stop-analyzing-api
 ```
 
-or to run with your local Go installation:
+### Build API environment under Docker
+
+To build stop-analyzing-api environment execute the bash script below at the project root folder:
+
+```
+$ local_build.sh
+```
+
+### Run API with local Go installation
+
+Execute the Go command bellow at the project root folder:
 
 ```
 $ go run main.go

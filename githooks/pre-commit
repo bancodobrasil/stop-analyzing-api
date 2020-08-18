@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 STAGED_GO_FILES=$(git diff --cached --name-only | grep ".go$")
 
@@ -24,10 +24,11 @@ do
 done
 
 if ! $PASS; then
-  printf "[COMMIT FAILED\n"
+  printf "COMMIT FAILED\n"
   exit 1
 else
   printf "COMMIT SUCCEEDED\n"
+  printf "DON'T FORGET TO RUN 'go test' COMMAND BEFORE PUSHING CHANGES\n"
 fi
 
 exit 0

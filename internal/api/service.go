@@ -1,9 +1,10 @@
 package api
 
 import (
-	"github.com/bancodobrasil/stop-analyzing-api/internal/api/v1"
-	"github.com/bancodobrasil/stop-analyzing-api/internal/domain"
 	"net/http"
+
+	v1 "github.com/bancodobrasil/stop-analyzing-api/internal/api/v1"
+	"github.com/bancodobrasil/stop-analyzing-api/internal/domain"
 
 	"github.com/bancodobrasil/stop-analyzing-api/internal/api/config"
 	ginprom "github.com/banzaicloud/go-gin-prometheus"
@@ -50,6 +51,7 @@ func (s *Server) RoutesV1() {
 	{
 		v1Group.GET("/", s.routesV1.Index)
 		v1Group.GET("/listTags", s.routesV1.ListAllTags)
+		v1Group.GET("/choice", s.routesV1.Choice)
 	}
 }
 

@@ -18,6 +18,7 @@ That's it. Just make yourself at home and good luck!
 ## Getting Started
 
 ### Configure pre-commit code validations
+
 This project includes pre-commit git hooks that make sure the code you commit is valid.
 In order to use them, you should rewire the default git hooks folder in your local repository by running (only once) ` git config core.hooksPath githooks`.
 
@@ -29,7 +30,7 @@ To generate the database and the go class to handle the connection run the migra
 2. At the scripts/prisma folder run the `generate.sh` file using the command `sh generate.sh`
 3. Your database is started and the tables are generated
 
-### Build API under Docker
+### Build API using Docker
 
 To build stop-analyzing-api run the below code at the project root folder to run with Docker (suggested):
 
@@ -37,7 +38,7 @@ To build stop-analyzing-api run the below code at the project root folder to run
 docker-compose build
 ```
 
-### Run API under Docker
+### Run API using Docker
 
 To run stop-analyzing-api run the below code at the project root folder:
 
@@ -45,7 +46,7 @@ To run stop-analyzing-api run the below code at the project root folder:
 $ docker-compose up stop-analyzing-api
 ```
 
-### Build API environment under Docker
+### Build API environment using Docker
 
 To build stop-analyzing-api environment execute the bash script below at the project root folder:
 
@@ -53,12 +54,12 @@ To build stop-analyzing-api environment execute the bash script below at the pro
 $ local_build.sh
 ```
 
-### Run API with local Go installation
+### Run API using local Go installation
 
 Execute the Go command bellow at the project root folder:
 
 ```
-$ go run main.go
+$ DATABASE_URL=postgresql://user2020:pass2020@postgres:5432/stop-analyzing-api go run main.go
 ```
 
 ## Awesome list of other Poppins projects for you to go

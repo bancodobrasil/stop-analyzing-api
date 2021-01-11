@@ -450,6 +450,8 @@ github.com/prisma/prisma-client-go v0.0.6 h1:+NkD8LfC5ayv66nPnGQ6Pe8Zw4xPbZFzgB0
 github.com/prisma/prisma-client-go v0.0.6/go.mod h1:N2XDbo3cYql1O0EjheOvS1q5g6vIlLzvNILdFUuYI/k=
 github.com/prisma/prisma-client-go v0.0.9 h1:BBbVszC+eB9MYhnN0nvjs6MZzXo4u6uDSowK8NtaoyU=
 github.com/prisma/prisma-client-go v0.0.9/go.mod h1:N2XDbo3cYql1O0EjheOvS1q5g6vIlLzvNILdFUuYI/k=
+github.com/prisma/prisma-client-go v0.2.0 h1:aBo13A9cWsv9XCYOpi1YECbmNcCZ0WKUS7a1pMyAcgs=
+github.com/prisma/prisma-client-go v0.2.0/go.mod h1:N2XDbo3cYql1O0EjheOvS1q5g6vIlLzvNILdFUuYI/k=
 github.com/prometheus/client_golang v0.9.1/go.mod h1:7SWBe2y4D6OKWSNQJUaRYU/AaXPKyh/dDVn+NZz0KFw=
 github.com/prometheus/client_golang v0.9.3-0.20190127221311-3c4408c8b829/go.mod h1:p2iRAGwDERtqlqzRXnrOVns+ignqQo//hLXqYxZYVNs=
 github.com/prometheus/client_golang v0.9.3 h1:9iH4JKXLzFbOAdtqv/a+j8aewx2Y8lAjAydhbaScPF8=

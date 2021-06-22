@@ -2,6 +2,7 @@ package domain
 
 import (
 	"context"
+
 	"github.com/bancodobrasil/stop-analyzing-api/internal/db"
 	"github.com/sirupsen/logrus"
 )
@@ -35,5 +36,9 @@ func (d *Service) Disconnect() {
 //DropAllItems removes all existing database items
 func (d *Service) DropAllItems() (int, error) {
 	ctx := context.Background()
-	return d.client.Item.FindMany().Delete().Exec(ctx)
+	br, err := d.client.Item.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return 0, err
+	}
+	return br.Count, nil
 }

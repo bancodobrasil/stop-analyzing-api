@@ -20,14 +20,28 @@ That's it. Just make yourself at home and good luck!
 ### Configure pre-commit code validations
 
 This project includes pre-commit git hooks that make sure the code you commit is valid.
-In order to use them, you should rewire the default git hooks folder in your local repository by running (only once) ` git config core.hooksPath githooks`.
+In order to use them, you should rewire the default git hooks folder in your local repository by running (only once) 
+```bash
+git config core.hooksPath githooks
+```
+
 
 ### Generate database using the Prisma migration tool
 
 To generate the database and the go class to handle the connection run the migration tool:
 
-1. Start database and pgadmin using the command `docker-compose up -d postgres pgadmin`
-2. At the scripts/prisma folder run the `generate.sh` file using the command `sh generate.sh`
+1. Start database and pgadmin using the command
+
+```bash 
+docker-compose up -d postgres pgadmin
+```
+
+2. At the scripts/prisma folder run the **generate.sh** file using the command 
+
+```bash 
+sh generate.sh
+```
+
 3. Your database is started and the tables are generated
 
 ### Build API using Docker
@@ -59,7 +73,7 @@ $ local_build.sh
 Execute the Go command bellow at the project root folder:
 
 ```
-$ DATABASE_URL=postgresql://user2020:pass2020@postgres:5432/stop-analyzing-api go run main.go
+$ DATABASE_URL=postgresql://user2020:pass2020@localhost:5432/stop-analyzing-api go run main.go
 ```
 
 ## Awesome list of other Poppins projects for you to go

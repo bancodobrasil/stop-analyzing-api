@@ -2,16 +2,17 @@ package domain
 
 import (
 	"context"
+
 	"github.com/bancodobrasil/stop-analyzing-api/internal/db"
 )
 
 //CreateItem creates a new item using provided information and new tags if needes.
 //It tries to reuse existing tag with the same name
-func (s *Service) CreateItem(title, subtitle, content string, tags []string) (db.ItemModel, error) {
+func (s *Service) CreateItem(title, subtitle, content string, tags []string) (*db.ItemModel, error) {
 
 	mTags, err := s.FetchOrCreateTags(tags)
 	if err != nil {
-		return db.ItemModel{}, err
+		return &db.ItemModel{}, err
 	}
 
 	item, err := s.client.Item.CreateOne(
@@ -26,7 +27,7 @@ func (s *Service) CreateItem(title, subtitle, content string, tags []string) (db
 	}
 
 	//Link tags - TODO: Check if its possible to use/create one method to link them all
-	findResult := s.client.Item.FindOne(
+	findResult := s.client.Item.FindUnique(
 		db.Item.ID.Equals(item.ID),
 	)
 	for _, mTag := range mTags {
@@ -39,9 +40,9 @@ func (s *Service) CreateItem(title, subtitle, content string, tags []string) (db
 }
 
 //FetchItem searchs for an item using its unique id
-func (s *Service) FetchItem(id int) (db.ItemModel, error) {
+func (s *Service) FetchItem(id int) (*db.ItemModel, error) {
 	ctx := context.Background()
-	return s.client.Item.FindOne(
+	return s.client.Item.FindUnique(
 		db.Item.ID.Equals(id),
 	).With(
 		db.Item.Tags.Fetch(),
@@ -49,8 +50,8 @@ func (s *Service) FetchItem(id int) (db.ItemModel, error) {
 }
 
 //DeleteItem remove an existing database item
-func (s *Service) DeleteItem(id int) (db.ItemModel, error) {
-	return s.client.Item.FindOne(
+func (s *Service) DeleteItem(id int) (*db.ItemModel, error) {
+	return s.client.Item.FindUnique(
 		db.Item.ID.Equals(id),
 	).Delete().Exec(context.Background())
 }

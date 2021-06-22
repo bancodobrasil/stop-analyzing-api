@@ -2,11 +2,12 @@ package domain
 
 import (
 	"context"
+
 	"github.com/bancodobrasil/stop-analyzing-api/internal/db"
 )
 
 //CreateTag .
-func (s *Service) CreateTag(tagName string) (db.TagModel, error) {
+func (s *Service) CreateTag(tagName string) (*db.TagModel, error) {
 	ctx := context.Background()
 	return s.client.Tag.CreateOne(
 		db.Tag.Text.Set(tagName),
@@ -51,7 +52,7 @@ func (s *Service) FetchOrCreateTags(names []string) (map[string]db.TagModel, err
 			if err != nil {
 				return nil, err
 			}
-			nTags[name] = newTag
+			nTags[name] = *newTag
 		}
 	}
 
@@ -60,7 +61,7 @@ func (s *Service) FetchOrCreateTags(names []string) (map[string]db.TagModel, err
 
 //DeleteTag remove an existing database tag
 func (s *Service) DeleteTag(name string) error {
-	_, err := s.client.Tag.FindOne(
+	_, err := s.client.Tag.FindUnique(
 		db.Tag.Text.Equals(name),
 	).Delete().Exec(context.Background())
 
@@ -70,5 +71,9 @@ func (s *Service) DeleteTag(name string) error {
 //DropAllTags removes all existing database tags
 func (s *Service) DropAllTags() (int, error) {
 	ctx := context.Background()
-	return s.client.Tag.FindMany().Delete().Exec(ctx)
+	br, err := s.client.Tag.FindMany().Delete().Exec(ctx)
+	if err != nil {
+		return 0, err
+	}
+	return br.Count, nil
 }

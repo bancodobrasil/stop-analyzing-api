@@ -20,4 +20,4 @@ RUN apt-get update && apt-get install -y ca-certificates
 
 COPY --from=builder /go/bin/stop-analyzing-api /app/stop-analyzing-api
 
-CMD ["./stop-analyzing-api", "serve"]
+CMD ["./stop-analyzing-api", "serve", "--databaseURL", "postgresql://user2020:pass2020@postgres:5432/stop-analyzing-api"] 

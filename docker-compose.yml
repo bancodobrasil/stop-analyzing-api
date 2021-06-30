@@ -8,7 +8,6 @@ services:
       - 8000:8000
     restart: always
     environment:
-      - DATABASE_URL=postgresql://user2020:pass2020@postgres:5432/stop-analyzing-api
       - STPA_API_LOG_LEVEL=info
       - STPA_API_PORT=8000
 
